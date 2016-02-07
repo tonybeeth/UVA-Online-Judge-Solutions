@@ -1,0 +1,84 @@
+// Sticker Collector Robot.cpp : Defines the entry point for the console application.
+// UVA 11831
+
+#include<iostream>
+#include<string>
+
+using namespace std;
+
+
+int main(int argc, char* argv[])
+{
+	char robLand[100][100];
+	string robInst, line, junk;
+	int N, M, S, robR, robC, numStk;
+	char dir;
+	while (cin >> N >> M >> S)
+	{
+		numStk = 0;
+		if (N == 0 && M == 0 && S == 0)
+			break;
+		else
+		{
+			//read remaining junk from previous line
+			getline(cin, junk);
+			//FILL ROBOLAND
+			for (int i = 0; i < N; i++)
+			{
+				getline(cin, line);
+				for (int j = 0; j < M; j++){
+					//check for starting position
+					if (line[j] == 'N' || line[j] == 'S' || line[j] == 'L' || line[j] == 'O'){
+						robC = j; robR = i;
+						dir = line[j];
+					}
+					robLand[i][j] = line[j];
+				}
+			}
+			getline(cin, robInst);
+			for (int i = 0; i < S; i++){
+				if (robInst[i] == 'D'){
+					//turn right
+					if (dir == 'N') dir = 'L';
+					else if (dir == 'L') dir = 'S';
+					else if (dir == 'S') dir = 'O';
+					else dir = 'N';
+				}
+				else if (robInst[i] == 'E'){
+					//turn left
+					if (dir == 'N') dir = 'O';
+					else if (dir == 'L') dir = 'N';
+					else if (dir == 'S') dir = 'L';
+					else dir = 'S';
+				}
+				else{
+					//move
+					if (dir == 'N' && robR > 0) {
+						if (robLand[robR - 1][robC] != '#')
+							robR--;
+					}
+					else if (dir == 'L' && robC < M - 1){
+						if (robLand[robR][robC + 1] != '#')
+							robC++;
+					}
+					else if (dir == 'S' && robR < N - 1){
+						if (robLand[robR + 1][robC] != '#')
+							robR++;
+					}
+					else if (dir == 'O' && robC > 0){
+						if (robLand[robR][robC - 1] != '#')
+							robC--;
+					}
+				}
+				if (robLand[robR][robC] == '*'){
+					//sticker found
+					numStk++; 
+					robLand[robR][robC] = '.';
+				}
+			}
+			cout << numStk << endl;
+		}
+	}
+	return 0;
+}
+
