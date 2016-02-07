@@ -1,0 +1,45 @@
+// Zeroes and ones.cpp : Defines the entry point for the console application.
+// UVA 10324
+
+#include<iostream>
+#include<string>
+#include<vector>
+using namespace std;
+
+int main(int argc, char* argv[])
+{
+	string val; 
+	vector<int> v;
+	//resize vector to fit maximum range of values
+	v.resize(1000000);
+	int a, b, numTests, caseNo = 0;
+
+	while (cin >> val)
+	{
+		caseNo++;
+		v[0] = 0;
+		//pre process vector
+		for (int i = 1; i < val.length(); i++)
+		{
+			//if current value is the same as previous value in string
+			if (val[i] == val[i - 1])
+				v[i] = v[i - 1];	//set current value to previous value in vector
+			else
+				v[i] = i;	//else begin a new sequence
+		}
+		cout << "Case " << caseNo << ":\n";
+		cin >> numTests;
+		while (numTests--){
+			cin >> a >> b;
+						
+			if (v[a] == v[b])
+				cout << "Yes\n";
+			else
+				cout << "No\n";
+			
+		}
+
+	}
+	return 0;
+}
+
