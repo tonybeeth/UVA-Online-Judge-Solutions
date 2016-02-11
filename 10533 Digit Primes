@@ -1,0 +1,74 @@
+//10533 Digit Primes.cpp : Defines the entry point for the console application.
+//
+
+#include<iostream>
+#include<bitset>
+#include<vector>
+#include<string>
+#include<string.h>
+#include<math.h>
+
+using namespace std;
+#define endl '\n'
+bitset<1000001> isPrime;
+vector<int> primeDigits;
+
+//Validate primes up to 1000000 using sieve of Eratosthenes
+void makeSieve(int n)
+{
+	isPrime.set();
+	int sqt = sqrt(n);
+	isPrime[0] = isPrime[1] = 0;
+	for (int i = 2; i <= sqt; i++){
+		if (isPrime[i])
+		{
+			for (int j = i*i; j <= n; j += i){
+				isPrime[j] = 0;
+			}
+		}
+	}
+}
+
+int main(int argc, char* argv[])
+{
+	//cout and cin are too slow for this problem; make them as fast as printf and scanf
+	ios_base::sync_with_stdio(false); cin.tie(0);
+	//freopen("data.dat", "r", stdin);
+	string val;
+	int sum;
+	makeSieve(1000000);
+	primeDigits.resize(1000001);
+	//o and 1 are not prime digits
+	primeDigits[0] = primeDigits[1] = 0;
+	
+	for (int i = 2; i < 1000001; i++)
+	{
+		sum = 0;
+		//number of primes up to i is at least the number of primes up to i - 1
+		primeDigits[i] = primeDigits[i - 1];
+		//prime digits must be primes
+		if (isPrime[i]){
+			//get sum of digits
+			val = to_string(i);
+			for (int j = 0; j < val.length(); j++)
+				sum += val[j] - '0';
+			//if sum is also prime, increment data
+			if (isPrime[sum]){
+				primeDigits[i]++;
+			}
+		}
+
+	}
+	int low, high, n;
+	cin >> n;
+	while (n--)
+	{
+		cin >> low >> high;
+		//number of digit primes between low and high
+		cout << primeDigits[high] - primeDigits[low-1] << endl;
+	}
+
+	
+	return 0;
+}
+
