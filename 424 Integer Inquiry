@@ -37,7 +37,7 @@ int main(int argc, char* argv[])
 			string sumStr;
 
 			int i, j;
-			//loop till VLG or result goes out of bounds
+			//loop till result goes out of range
 			for (i = MAX-1, j = VLG.length() - 1; i >= resBegin; i--, j--)
 			{
 				
@@ -58,7 +58,7 @@ int main(int argc, char* argv[])
 					carry = sumStr[0] - '0';
 				}
 			}
-				//if need to expand result
+			//if need to expand result
 			if (carry){
 				result[i] = carry + '0';
 				//expand begin position of result
