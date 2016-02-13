@@ -1,0 +1,83 @@
+//424 Integer Inquiry.cpp : Defines the entry point for the console application.
+//
+
+#include<iostream>
+#include<string>
+#include<string.h>
+#include<stdio.h>
+#include<sstream>
+using namespace std;
+
+#define endl '\n'
+
+//MAX must be at least 102
+const int MAX = 300;
+
+int main(int argc, char* argv[])
+{
+	ios_base::sync_with_stdio(false); cin.tie(0);
+	freopen("data.dat", "r", stdin);
+	//VeyLongInteger
+	string VLG;
+	char result[MAX];
+	getline(cin, VLG);
+	//position in array where result begins
+	int resBegin = MAX - VLG.length();
+	//copy first VLG to result array
+	strncpy(result + resBegin, &VLG[0], VLG.length());
+	//while there are more values
+	while (getline(cin, VLG))
+	{
+		if (VLG == "0")
+			break;
+		else
+		{
+			//add VLG to previous result
+			int carry = 0, sum;
+			string sumStr;
+
+			int i, j;
+			//loop till VLG or result goes out of bounds
+			for (i = MAX-1, j = VLG.length() - 1; i >= resBegin; i--, j--)
+			{
+				
+				if (j >= 0)
+					sum = (result[i] - '0') + (VLG[j] - '0') + carry;//if more digits from VLG, add
+				else
+					sum = (result[i] - '0') + carry; //else add carry to result
+				
+				if (sum < 10){
+					//if no carry, go on
+					result[i] = sum + '0';
+					carry = 0;
+				}
+				else{
+					//if carry, assign carry digit and result digit
+					sumStr = to_string(sum);
+					result[i] = sumStr[1];
+					carry = sumStr[0] - '0';
+				}
+			}
+				//if need to expand result
+			if (carry){
+				result[i] = carry + '0';
+				//expand begin position of result
+				resBegin--;
+			}
+		}		
+		
+	}
+	char tempR[MAX];
+	string vlgR = "";
+	fill(tempR, tempR + MAX, '.');
+	//copy result into tempResult
+	strncpy(tempR, result + resBegin, MAX - resBegin);
+	//get VLG result from temp result
+	stringstream ss(tempR);
+	getline(ss, vlgR, '.');
+	cout << vlgR << endl;
+
+
+	return 0;
+}
+
