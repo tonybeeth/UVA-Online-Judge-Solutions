@@ -1,0 +1,31 @@
+//913 Joana and the odd numbers.cpp : Defines the entry point for the console application.
+//
+
+#include<iostream>
+#include<stdio.h>
+using namespace std;
+
+#define endl '\n'
+
+int main(int argc, char* argv[])
+{
+	ios_base::sync_with_stdio(false); cin.tie(0);
+
+	//freopen("data.dat", "r", stdin);
+	unsigned long long n, x, oddIdx, oddN, sum;
+
+	while (cin >> n)
+	{
+		//get xth row (row goes 1, 2, 3, 4, ...)
+		x = (n + 1) / 2;
+		//number of odd numbers from 1st to xth row, using sum of arithemetic sequence formula
+		oddIdx = (x* (1 + n)) / 2;	
+		//get last odd number in xth row
+		oddN = oddIdx * 2 - 1;
+		//sum last 3 odd numbers in xth row
+		sum = oddN + oddN - 2 + oddN - 4;
+		cout << sum << endl;
+	}
+	return 0;
+}
+
