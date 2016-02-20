@@ -1,0 +1,81 @@
+//10100 Longest Match.cpp : Defines the entry point for the console application.
+//
+
+#include<iostream>
+#include<string>
+#include<sstream>
+#include<map>
+#include<algorithm>
+#include<stdio.h>
+#include<iomanip>
+#include<vector>
+#include<bitset>
+
+using namespace std;
+
+#define endl '\n'
+
+bool notAlpha(char c)
+{
+	return !isalnum(c);
+}
+
+int main(int argc, char* argv[])
+{
+	ios_base::sync_with_stdio(false); cin.tie(0);
+	//freopen("data.dat", "r", stdin);
+	string first, second;
+	vector<string> v1, v2;
+	vector<int> L[1000];
+	stringstream ss1, ss2;
+	for (int i = 0; i < 1000; i++)
+		L[i].resize(1000);
+	int test = 0;
+
+	while (getline(cin, first))
+	{
+		getline(cin, second);
+		if (first.length() == 0 || second.length() == 0){
+			cout << right << setw(2) << ++test;
+			cout << ". Blank!" << endl;
+		}
+		else
+		{
+			//replace all non alphabets with a space
+			replace_if(first.begin(), first.end(), notAlpha, ' ');
+			replace_if(second.begin(), second.end(), notAlpha, ' ');
+			
+			ss1 = stringstream(first); ss2 = stringstream(second);
+			string word;
+			//move words in first to a vector 1
+			while (ss1 >> word){
+				v1.push_back(word);
+			}
+			//move words in second to vector 2
+			while (ss2 >> word)
+			{
+				v2.push_back(word);
+			}
+
+			//LCS Algorithm
+			//L[i][j] gives the length of the longest common 
+			//subsequence of first[0 to i-1] and second[0 to j-1]
+			for (int i = 0; i <= v1.size(); i++){
+				for (int j = 0; j <= v2.size(); j++){
+					if (i == 0 || j == 0)
+						L[i][j] = 0;
+					else if (v1[i-1] == v2[j-1])
+						L[i][j] = L[i - 1][j - 1] + 1;
+					else
+						L[i][j] = max(L[i - 1][j], L[i][j - 1]);
+				}
+			}
+			
+			cout << right << setw(2) << ++test;
+			cout << ". Length of longest match: " << L[v1.size()][v2.size()] << endl;
+			v1.clear(); v2.clear();
+		}
+	}
+	return 0;
+}
+
