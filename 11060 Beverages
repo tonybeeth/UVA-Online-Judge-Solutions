@@ -1,0 +1,119 @@
+//11060 Beverages.cpp : Defines the entry point for the console application.
+//
+
+#include<iostream>
+#include<vector>
+#include<map>
+#include<string>
+#include<stack>
+#include<set>
+#include<algorithm>
+
+using namespace std;
+#define endl '\n'
+
+struct sNode{
+	string beer;
+	sNode *next = NULL;
+};
+struct Node
+{
+	string beer;
+	sNode* first = NULL, *last = NULL;
+	vector<Node*> children;
+	bool sorted = false;
+};
+
+map<string, int> idxMap;
+vector<Node> V;
+
+int main(int argc, char* argv[])
+{
+	ios_base::sync_with_stdio(false); cin.tie(0);
+	//freopen("data.dat", "r", stdin);
+	V.resize(101);
+	int n, m, test = 1;
+	string drink, othDrink, ans;
+	Node in;
+	Node* ptr;
+	sNode* sPtr, *prev;
+	
+
+	while (cin >> n)
+	{
+		ans = "Case #" + to_string(test) + ": Dilbert should drink beverages in this order:";
+		test++;
+		cin.ignore();
+		//read in drinks
+		for (int i = 0; i < n; i++){
+			getline(cin, drink);
+			in.beer = drink;
+			V[i] = in;
+			idxMap[drink] = i;
+		}
+		cin >> m;
+		cin.ignore();
+		//create structure for pairs using stated property
+		for (int i = 0; i < m; i++)
+		{
+			getline(cin, drink, ' ');
+			getline(cin, othDrink);
+			ptr = &(V[idxMap[othDrink]]);
+			//build parent nodes structure
+			sPtr = new sNode;
+			sPtr->beer = V[idxMap[drink]].beer;
+			if (!ptr->first){
+				ptr->first = sPtr;
+				ptr->last = ptr->first;
+			}
+			else{
+				ptr->last->next = sPtr;
+				ptr->last = sPtr;
+			}
+
+			V[idxMap[drink]].children.push_back(ptr);
+		}
+		
+		for (size_t i = 0; i < n; i++)
+		{
+			for (size_t j = 0; j < n; j++)
+			{
+				if (!V[j].sorted && !V[j].first){
+					// if V[j] hasn't been sorted and has no parent, add to answer
+					ans += " " + V[j].beer;
+					//remove traces of parenthood of V[j] from other nodes
+					for (size_t k = 0; k < V[j].children.size(); k++)
+					{
+						sPtr = V[j].children[k]->first;
+						prev = sPtr;
+						while (sPtr != NULL){
+							if (sPtr->beer == V[j].beer){
+								//remove
+								if (prev == sPtr){
+									V[j].children[k]->first = sPtr->next; prev = NULL;
+								}
+								else
+									prev->next = sPtr->next;
+								delete sPtr;
+								sPtr = NULL;
+							}
+							else{
+								prev = sPtr;
+								sPtr = sPtr->next;
+							}
+						}
+					}
+
+					V[j].sorted = true;
+					j = n;
+				}
+
+			}
+		}
+		ans += ".";
+		cout << ans << endl << endl;
+	}
+	
+	return 0;
+}
+
