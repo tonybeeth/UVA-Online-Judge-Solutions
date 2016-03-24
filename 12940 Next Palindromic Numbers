@@ -1,0 +1,91 @@
+//12940 Next Palindromic Numbers.cpp : Defines the entry point for the console application.
+//
+
+#include<iostream>
+#include<string>
+#include<string.h>
+#include<algorithm>
+#include<stdio.h>
+
+using namespace std;
+
+#define endl '\n'
+
+//changes a palindrome number to the least greatest palindrome number after it
+void palinTopalin(string& input)
+{
+	int len = input.length(), mid = len >> 1, k = (~len & 1) ? mid - 1 : mid, z = mid;
+
+	for (k, z; k >= 0; k--, z++){
+		if (input[k] < '9'){
+			//increment both if less than 9
+			input[z] = ++input[k];
+			break;
+		}
+		//else spread out more
+		input[k] = input[z] = '0';
+	}
+	if (k < 0){
+		input = "1" + input;
+		input[input.length() - 1] = '1';
+	}
+}
+
+//changes any number to the least greatest palindrome after it
+void toNextPalin(string& input)
+{
+	bool trigger = false;
+	int len = input.length(), mid = len >> 1, st1 = mid - 1, st2 = (~len & 1) ? mid : mid + 1;
+
+	for (int i = st1, j = st2; i >= 0 && j < input.length(); i--, j++)
+	{
+		if (input[i] == input[j]) //both inputs are ok
+			continue;
+		if (input[i] > input[j]){ //we can increase on the right no problem
+			input[j] = input[i];
+			trigger = true;
+		}
+		else{
+			if (!trigger){ 		
+				//char @ j > char @ i ----- go to middle and start incrementing
+				trigger = true;
+				int k = (~len & 1) ? mid - 1 : mid, z = mid;
+		
+				palinTopalin(input);
+				
+			}
+			//already balanced, just assign same value on left to right
+			input[j] = input[i];
+
+		}
+	}
+}
+
+
+int main(int argc, char* argv[])
+{
+	freopen("data.dat", "r", stdin);
+	ios_base::sync_with_stdio(false); cin.tie(0);
+
+	int n, len, mid;
+	string input, rev;
+	bool trigger = false;
+	while (cin >> n >> rev)
+	{
+		trigger = false;
+		//make input a palindrome
+		input = rev;
+		reverse(rev.begin(), rev.end());
+		if (rev == input) //if already a palindrome, adjust to get next palindrome
+			palinTopalin(input);
+		toNextPalin(input);
+		cout << input << endl;
+		while (--n)
+		{
+			palinTopalin(input);
+			cout << input << endl;
+		}
+	}
+	return 0;
+}
+
