@@ -1,0 +1,76 @@
+// 10000 Longest Paths.cpp : Defines the entry point for the console application.
+//
+
+#include<iostream>
+#include<vector>
+#include<stdio.h>
+
+using namespace std;
+
+#define endl '\n'
+
+struct Node {
+	int height = -1, lastNode;
+	vector<int> children;
+};
+
+vector<Node> inputs;
+
+void longestPath(int start)
+{
+	int lastNode, len = 0;
+	if (inputs[start].children.size() == 0) { //if no children, 
+		inputs[start].height = 0;
+		inputs[start].lastNode = start; //start is the last node
+	}
+	for (int i = 0; i < inputs[start].children.size(); i++)
+	{
+		if (inputs[inputs[start].children[i]].height < 0) { 
+			//if height hasn't been calculated for i yet, calculate height
+			longestPath(inputs[start].children[i]);
+		}
+		//get height of path from child
+		len = inputs[inputs[start].children[i]].height + 1;
+		//get last node on path from child
+		lastNode = inputs[inputs[start].children[i]].lastNode;
+
+		//if len is greater than current height of start node, update height and lastNode
+		if (len > inputs[start].height) {
+			inputs[start].height = len;
+			inputs[start].lastNode = lastNode;
+		}
+		else if (len == inputs[start].height && lastNode < inputs[start].lastNode) {
+			//else update last node with smallest of last nodes
+			inputs[start].lastNode = lastNode;
+		}
+	}
+
+}
+
+int main()
+{
+	//freopen("data.dat", "r", stdin);
+	ios_base::sync_with_stdio(false); cin.tie(0);
+	int n, s, fro, to, caseN = 1, len = 0;
+	Node in;
+	while (cin >> n >> s)
+	{
+		inputs.clear();
+		inputs.resize(101);
+		if (n == 0) break;
+
+		while (cin >> fro >> to) {
+			if (fro == 0 && to == 0)
+				break;
+			
+			inputs[fro].children.push_back(to);
+		}
+		
+		longestPath(s);
+
+		cout << "Case " << caseN++ << ": " << "The longest path from " << s << " has length " << inputs[s].height << ", finishing at " << inputs[s].lastNode << "." << endl << endl;
+
+	}
+    return 0;
+}
+
