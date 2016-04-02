@@ -1,0 +1,89 @@
+// At most twice.cpp : Defines the entry point for the console application.
+//
+
+#include <iostream>
+#include <stdio.h>
+#include <string>
+#include <vector>
+
+using namespace std;
+
+#define endl '\n'
+
+int main(int argc, char* argv[])
+{
+	//freopen("data.dat", "r", stdin);
+	ios_base::sync_with_stdio(false); cin.tie(0);
+	vector<int> V[20];
+	for (int i = 0; i < 20; i++)
+		V[i].resize(10);
+	
+	string line;
+	int k;
+	while (getline(cin, line))
+	{
+		for (int i = 0; i < 20; i++)
+			std::fill(V[i].begin(), V[i].end(), 0);
+		for (size_t i = 0; i < line.length(); i++)
+		{
+			k = line[i] - '0';
+			if (V[i][k] < 2) { //less than 2 occurences of current value
+				for (int j = i; j < line.length(); j++)
+					V[j][k]++;
+			}
+			else
+			{
+				//third occurence has occured
+				int j;
+				//for each value from input[current] down to input[0]
+				for (j = i; j >= 0; j--)
+				{
+					int z;
+					k = line[j] - '0';
+					//loop through all values less than value @ input[j]
+					for (z = k - 1; z >= 0; z--) {
+						//if value has occured less than twice before input[j], change j to said value
+						if (V[j][z] < 2) {
+							if (j != i)
+								V[j][k]--;
+
+							line[j] = z + '0';
+
+							if (j == 0 && line[j] == '0') { 
+								j--;
+								break;
+							}							
+							V[j][z]++;
+							break;
+						}
+					}
+					//if one value is changed, break
+					if (z >= 0)
+						break;
+				}
+
+				if (j < 0)
+					j++;
+			
+				//reset all values from j + 1 appropriate highest values
+				int x = 9;
+				for (int a = j + 1; a < line.length(); a++)
+				{
+					for (x; x >= 0; x--) {
+						if (V[j][x] < 2) { //if val has occurred < twice, add
+							line[a] = x + '0';
+							V[j][x]++;
+							break;
+						}
+					}
+				}
+				if (j == 0 && line[j] == '0')
+					line = line.substr(1);
+				break;
+			}
+		}
+		cout << line << endl;
+	}
+	return 0;
+}
+
