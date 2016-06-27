@@ -1,0 +1,121 @@
+#include <iostream>
+#include<vector>
+#include<cmath>
+#include<bitset>
+#include<stdio.h>
+
+using namespace std;
+
+#define endl '\n'
+
+const int N = 1001;
+const int SQT = 31;
+
+bitset<N> isPrime;
+vector<int> primes;
+vector< vector<int> > primeFactors;
+vector< bitset<N> > pathExists;
+
+
+void sieve() throw()
+{
+    isPrime.set();
+    isPrime[0] = isPrime[1] = 0;
+    for(int i = 0; i <= SQT; i++)
+    {
+        if(isPrime[i]){
+            primes.push_back(i);
+            for(int j = i*i; j < N; j+=i){
+                isPrime[j] = 0;
+            }
+        }
+    }
+}
+
+void factorAll() throw()
+{
+    int pIdx, sqt, n;
+    for(int i = 2; i < N; i++)
+    {
+        if(!isPrime[i])
+        {
+            n =i;
+            pIdx = 0; sqt = sqrt(n);
+            while(pIdx < primes.size() && primes[pIdx] <= sqt){
+                if(n % primes[pIdx] == 0){
+                    primeFactors[i].push_back(primes[pIdx]);
+                    n/=primes[pIdx];
+                    while(n%primes[pIdx] == 0){
+                        n/=primes[pIdx];
+                    }
+                    
+                }
+                pIdx++;
+            }
+            if(n > 1){
+                primeFactors[i].push_back(n);
+            }
+        }
+    }
+}
+
+void dump()
+{
+    for(int i = 0; i < N;i++)
+    {
+        cout << i << ":  ";
+        for(int j = 0; j < primeFactors[i].size(); j++)
+        {
+            cout << primeFactors[i][j] << " ";
+        }
+        cout << endl;
+    }
+}
+
+bool findPath(int S, int T)
+{
+    for(int i = 0; i < primeFactors[S].size(); i++){
+        if(S == T)
+        if(S+primeFactors[S][i] < T){
+            if(findPath(s+primeFactors[S][i], T)){
+                pathExists[S][T]=true;
+            }
+        }
+        else{
+            pathExists[S][T]=
+        }
+    }
+}
+
+int main()
+{
+    //ios_base::sync_with_stdio(false); cin.tie(0);
+    primeFactors.resize(N);
+    pathExists.resize(N);
+    
+    sieve();
+    factorAll();
+    // dump();
+    for(int i = 4; i < N; i++)
+    {
+        for(int j = i+1; j < N;j++){
+            
+        }
+    }
+    
+    int S, T;
+    
+    while(cin >> S >> T)
+    {
+        if(!S&&!T) break;
+        
+        while()
+        {
+            
+        }
+    }
+    
+   
+   return 0;
+}
+
