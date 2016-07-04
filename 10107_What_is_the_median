@@ -1,0 +1,69 @@
+#include <iostream>
+#include<vector>
+#include<queue>
+#include<algorithm>
+#include<stdio.h>
+using namespace std;
+
+#define endl '\n'
+#define rg register
+#define ull unsigned long long int
+
+int main() {
+	// your code goes here
+	ios_base::sync_with_stdio(false); cin.tie(0);
+	
+	priority_queue<int, vector<int>, less<int> > Q;
+	priority_queue<int, vector<int>, greater<int> > Q1;
+
+	rg ull prev, next, mid, mid1;
+	cin >> prev >> next;
+	Q.push(min(next, prev));
+	Q1.push(max(next, prev));
+	mid = Q.top();
+	mid1 = Q1.top();
+	cout << prev << endl << ((prev+next)>>1) << endl;
+	
+	while(cin >> next)
+	{
+		if(Q.size() == Q1.size())
+		{
+			if(next < mid){//insert into first Q
+				Q.push(next);
+				cout << Q.top() << endl;
+			}
+			else{
+				Q1.push(next);
+				cout << Q1.top() << endl;
+			}
+		}
+		else 
+		{
+			if(Q.size() > Q1.size())
+			{
+				if(next > Q.top()){ //add next to second Q
+					Q1.push(next);
+				}
+				else{
+					Q1.push(Q.top()); Q.pop(); Q.push(next);
+				}
+			}
+			else
+			{
+				if(next < Q1.top()){//add next to first Q
+					Q.push(next);
+				}
+				else{
+					Q.push(Q1.top()); Q1.pop(); Q1.push(next);
+				}
+			}
+			//now both are of equal sizes
+			mid = Q.top();
+			mid1 = Q1.top();
+			cout << ((mid+mid1)>>1) << endl;
+		}
+		
+	}
+	
+	return 0;
+}
